@@ -5,3 +5,5 @@
 4. Open https://<username>.github.io/calorie-app/ in Safari > Share > Add to Home Screen.
 5. In the app Settings paste: username, repo, token, USDA key (api.data.gov/signup), goals.
 Security: enable 2FA, no collaborators, token expiry, revoke if phone is lost.
+
+
