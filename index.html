@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Calories">
+<link rel="manifest" href="manifest.json">
+<title>Calories</title>
+<style>
+:root{--bg:#f2f2f7;--card:#fff;--tx:#111;--mut:#6b6b73;--o:#ff9500;--b:#0a84ff;--g:#30b350;--r:#ff3b30}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--card:#1c1c1e;--tx:#fff;--mut:#9a9aa0}}
+*{box-sizing:border-box}body{margin:0;font:16px -apple-system,system-ui,sans-serif;background:var(--bg);color:var(--tx);padding-bottom:40px}
+header{position:sticky;top:0;background:var(--card);padding:calc(env(safe-area-inset-top) + 10px) 16px 12px;box-shadow:0 1px 6px #0002;z-index:5}
+.big{font-size:28px;font-weight:700}.row{display:flex;gap:16px}.row>div{flex:1}
+.lbl{font-size:12px;color:var(--mut)}.bar{height:6px;background:#8883;border-radius:3px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%}
+main{padding:12px 16px}.card{background:var(--card);border-radius:12px;padding:12px;margin-bottom:12px}
+input,select,button{font:inherit;padding:10px;border-radius:8px;border:1px solid #8885;background:var(--bg);color:var(--tx);width:100%}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin:8px 0}
+.g3b{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+button.p{background:var(--b);color:#fff;border:0;font-weight:600}button.d{color:var(--r)}
+.seg{display:flex;gap:8px;margin-bottom:8px}.seg button{flex:1}.seg .on{background:var(--b);color:#fff}
+.item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #8883}
+.item:last-child{border:0}.sm{font-size:12px;color:var(--mut)}
+.m{padding:8px 0;border-bottom:1px solid #8883}.m.sel{font-weight:600;color:var(--b)}
+h3{margin:16px 0 8px}#st{font-size:12px;color:var(--mut);text-align:right}
+</style>
+</head>
+<body>
+<header>
+  <div class="lbl">Today · <span id="st"></span></div>
+  <div class="big"><span id="cal">0</span> <span class="lbl">/ <span id="gcal"></span> kcal</span></div>
+  <div class="bar"><i id="bcal" style="background:var(--o)"></i></div>
+  <div class="row" style="margin-top:8px">
+    <div><div class="lbl">Protein <b id="pro">0</b> / <span id="gpro"></span> g</div><div class="bar"><i id="bpro" style="background:var(--b)"></i></div></div>
+    <div><div class="lbl">Fiber <b id="fib">0</b> / <span id="gfib"></span> g</div><div class="bar"><i id="bfib" style="background:var(--g)"></i></div></div>
+  </div>
+</header>
+<main>
+  <div class="card" id="form">
+    <div class="seg"><button id="mLook" class="on">Look up</button><button id="mMan">Enter calories</button></div>
+    <div id="look">
+      <div class="g3">
+        <input id="name" placeholder="Ingredient" autocapitalize="none">
+        <input id="amt" placeholder="Amount" inputmode="decimal">
+        <select id="unit"><option>g</option><option>oz</option><option>ml</option><option>cup</option><option>tbsp</option></select>
+      </div>
+      <button id="find">Find nutrition</button>
+      <div id="matches"></div>
+      <div id="preview" class="sm" style="margin-top:8px"></div>
+    </div>
+    <div id="man" hidden>
+      <input id="mname" placeholder="Food name">
+      <div class="g3b">
+        <input id="mcal" placeholder="kcal" inputmode="decimal">
+        <input id="mpro" placeholder="Protein g" inputmode="decimal">
+        <input id="mfib" placeholder="Fiber g" inputmode="decimal">
+      </div>
+    </div>
+    <button class="p" id="save" style="margin-top:8px">Add</button>
+    <button id="cancel" hidden style="margin-top:8px">Cancel edit</button>
+    <div id="err" class="sm" style="color:var(--r)"></div>
+  </div>
+  <h3>Today</h3><div class="card" id="list"></div>
+  <h3>Past 7 days</h3><div id="hist"></div>
+  <h3>Settings</h3>
+  <div class="card">
+    <input id="owner" placeholder="GitHub username">
+    <input id="repo" placeholder="Data repo (calorie-data)" style="margin-top:8px">
+    <input id="token" type="password" placeholder="Fine-grained token" style="margin-top:8px">
+    <input id="usda" type="password" placeholder="USDA API key" style="margin-top:8px">
+    <div class="g3b"><input id="kcalG" placeholder="kcal goal" inputmode="numeric"><input id="proG" placeholder="protein goal" inputmode="numeric"><input id="fibG" placeholder="fiber goal" inputmode="numeric"></div>
+    <button class="p" id="saveCfg">Save settings &amp; sync</button>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
