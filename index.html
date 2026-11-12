@@ -17,13 +17,14 @@ header{position:sticky;top:0;background:var(--card);padding:calc(env(safe-area-i
 .bar i{display:block;height:100%}
 main{padding:12px 16px}.card{background:var(--card);border-radius:12px;padding:12px;margin-bottom:12px}
 input,select,button{font:inherit;padding:10px;border-radius:8px;border:1px solid #8885;background:var(--bg);color:var(--tx);width:100%}
-.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin:8px 0}
+.g3{display:grid;grid-template-columns:2fr 1fr 1.4fr;gap:8px;margin:8px 0}
 .g3b{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
 button.p{background:var(--b);color:#fff;border:0;font-weight:600}button.d{color:var(--r)}
 .seg{display:flex;gap:8px;margin-bottom:8px}.seg button{flex:1}.seg .on{background:var(--b);color:#fff}
 .item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #8883}
 .item:last-child{border:0}.sm{font-size:12px;color:var(--mut)}
 .m{padding:8px 0;border-bottom:1px solid #8883}.m.sel{font-weight:600;color:var(--b)}
+.tag{font-size:11px;padding:1px 6px;border-radius:6px;background:#8883;margin-left:6px}
 h3{margin:16px 0 8px}#st{font-size:12px;color:var(--mut);text-align:right}
 </style>
 </head>
@@ -31,20 +32,22 @@ h3{margin:16px 0 8px}#st{font-size:12px;color:var(--mut);text-align:right}
 <header>
   <div class="lbl">Today · <span id="st"></span></div>
   <div class="big"><span id="cal">0</span> <span class="lbl">/ <span id="gcal"></span> kcal</span></div>
-  <div class="bar"><i id="bcal" style="background:var(--o)"></i></div>
+  <div class="bar"><i id="bcal"></i></div>
   <div class="row" style="margin-top:8px">
-    <div><div class="lbl">Protein <b id="pro">0</b> / <span id="gpro"></span> g</div><div class="bar"><i id="bpro" style="background:var(--b)"></i></div></div>
-    <div><div class="lbl">Fiber <b id="fib">0</b> / <span id="gfib"></span> g</div><div class="bar"><i id="bfib" style="background:var(--g)"></i></div></div>
+    <div><div class="lbl">Protein <b id="pro">0</b> / <span id="gpro"></span> g</div><div class="bar"><i id="bpro"></i></div></div>
+    <div><div class="lbl">Fiber <b id="fib">0</b> / <span id="gfib"></span> g</div><div class="bar"><i id="bfib"></i></div></div>
   </div>
 </header>
 <main>
   <div class="card" id="form">
     <div class="seg"><button id="mLook" class="on">Look up</button><button id="mMan">Enter calories</button></div>
     <div id="look">
+      <div class="lbl">I weighed/measured it as:</div>
+      <div class="seg" style="margin-top:4px"><button id="sAny">Any</button><button id="sRaw">Raw / dry</button><button id="sCook">Cooked</button></div>
       <div class="g3">
-        <input id="name" placeholder="Ingredient" autocapitalize="none">
+        <input id="name" placeholder="Ingredient (e.g. egg)" autocapitalize="none">
         <input id="amt" placeholder="Amount" inputmode="decimal">
-        <select id="unit"><option>g</option><option>oz</option><option>ml</option><option>cup</option><option>tbsp</option></select>
+        <select id="unit"><option value="g">g</option></select>
       </div>
       <button id="find">Find nutrition</button>
       <div id="matches"></div>
@@ -52,11 +55,13 @@ h3{margin:16px 0 8px}#st{font-size:12px;color:var(--mut);text-align:right}
     </div>
     <div id="man" hidden>
       <input id="mname" placeholder="Food name">
+      <div class="lbl" style="margin-top:8px">Nutrition for ONE item/serving (from the label)</div>
       <div class="g3b">
         <input id="mcal" placeholder="kcal" inputmode="decimal">
         <input id="mpro" placeholder="Protein g" inputmode="decimal">
         <input id="mfib" placeholder="Fiber g" inputmode="decimal">
       </div>
+      <input id="mcount" placeholder="How many? (default 1)" inputmode="decimal">
     </div>
     <button class="p" id="save" style="margin-top:8px">Add</button>
     <button id="cancel" hidden style="margin-top:8px">Cancel edit</button>
