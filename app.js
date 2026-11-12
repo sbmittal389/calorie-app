@@ -42,17 +42,35 @@ const persist = day => {
 };
 const setStatus = t => $('#st').textContent = t;
 
-async function sync() {
-  if (!cfg().token || !cfg().owner) return setStatus('set up settings');
+async function checkRepo() {
+  const r = await fetch(`https://api.github.com/repos/${cfg().owner}/${cfg().repo}`, { headers: hdr() });
+  if (r.status === 401) throw new Error('Token invalid or expired (401)');
+  if (r.status === 404) throw new Error('Repo not found, or token has no access to it (404). Check username, repo name, and token repo selection.');
+  if (!r.ok) throw new Error('GitHub ' + r.status);
+  const j = await r.json();
+  if (j.permissions && j.permissions.push === false) throw new Error('Token is read-only. Set Contents to Read and write.');
+}
+
+async function sync(showAlert = false) {
+  if (!cfg().token || !cfg().owner) {
+    setStatus('set up settings');
+    if (showAlert) alert('Fill in GitHub username, repo name, and token first.');
+    return;
+  }
   setStatus('syncing…');
   try {
+    await checkRepo();
     const keep = lastDays();
     const res = await Promise.all(keep.map(pull));
     keep.forEach((k, i) => days[k] = res[i]);
     Object.keys(days).forEach(k => { if (!keep.includes(k)) delete days[k]; });
     localStorage.days = JSON.stringify(days);
     setStatus('synced');
-  } catch (e) { setStatus('offline – ' + e.message); }
+    if (showAlert) alert('Connected to ' + cfg().owner + '/' + cfg().repo + '. Sync works.');
+  } catch (e) {
+    setStatus('error – ' + e.message);
+    if (showAlert) alert('Sync failed: ' + e.message);
+  }
   render();
 }
 
@@ -169,7 +187,7 @@ function loadCfg() { const c = cfg(); for (const k of ['owner', 'repo', 'token',
 $('#saveCfg').onclick = () => {
   const c = {}; for (const k of ['owner', 'repo', 'token', 'usda']) c[k] = $('#' + k).value.trim();
   for (const k of ['kcalG', 'proG', 'fibG']) c[k] = parseFloat($('#' + k).value) || cfg()[k];
-  localStorage.cfg = JSON.stringify(c); sync();
+  localStorage.cfg = JSON.stringify(c); sync(true);
 };
 
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (dkey() !== today) sync(); else render(); } });
